@@ -1,0 +1,11 @@
+insert into airport(airportid, airportname) values ("MCO", "Orlando");
+insert into airport(airportid, airportname) values ("JFK", "New York");
+insert into airport(airportid, airportname) values ("SFO", "San Francisco");
+insert into airport(airportid, airportname) values ("EWR", "Newark");
+
+insert into users (cid, firstname, lastname) values (1, "Maitreyi", "R")
+insert into flight (flightNum, departureairport, destinationairport) values (1, 'JFK', 'MCO');
+commit;
+
+insert into flight(flightNum, departuredate, departureairport, destinationairport) values (2, "20191230", "EWR","MCO");
+commit; 
