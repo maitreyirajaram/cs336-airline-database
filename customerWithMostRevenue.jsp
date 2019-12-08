@@ -11,7 +11,7 @@
 </head>
 <body>
 	<%
-		List<String> list = new ArrayList<String>();
+		/* find out which customer generated most total revenue */
 
 		try {
 
@@ -21,16 +21,7 @@
 			
 			//Create a SQL statement
 			Statement stmt = con.createStatement();
-			//Get the combobox from the index.jsp
-			int entity = Integer.parseInt(request.getParameter("stops"));
-			String str = null;
-			if (entity == 0){
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops = 0 ORDER by flightNum";
-			} else if (entity == 1){
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops = 1 ORDER by flightNum";
-			} else if (entity == 2) {
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops >= 2 ORDER by flightNum";
-			}
+			String str = "SELECT c.cid, c.lastname, c.firstname, sum(case when t.is_cancelled = 0 then (t.bookingcost+t.fare) else (t.bookingcost+t.cancelfee) end) AS revenue FROM ticket t join users c on (c.cid = t.cid) GROUP BY c.cid, c.lastname, c.firstname ORDER BY 4 DESC LIMIT 1";
 			
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(str);
@@ -42,23 +33,20 @@
 			out.print("<tr>");
 			//make a column
 			out.print("<td>");
-			out.print("Number of Stops");
+			//print out column header
+			out.print("CID");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Flight Number");
+			out.print("Last Name");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Departure Date");
+			out.print("First Name");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Destination Date");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Price");
+			out.print("Total Revenue");
 			out.print("</td>");
 			out.print("</tr>");
 
@@ -68,24 +56,16 @@
 				out.print("<tr>");
 				//make a column
 				out.print("<td>");
-
-				out.print(result.getString("stops"));
+				out.print(result.getString("cid"));
 				out.print("</td>");
 				out.print("<td>");
-
-				out.print(result.getString("flightNum"));
+				out.print(result.getString("lastname"));
 				out.print("</td>");
 				out.print("<td>");
-
-				out.print(result.getString("departuredate"));
+				out.print(result.getString("firstname"));
 				out.print("</td>");
 				out.print("<td>");
-
-				out.print(result.getString("destinationdate"));
-				out.print("</td>");
-				out.print("<td>");
-
-				out.print(result.getString("price"));
+				out.print(result.getString("revenue"));
 				out.print("</td>");
 				out.print("</tr>");
 

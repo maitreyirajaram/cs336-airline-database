@@ -11,7 +11,7 @@
 </head>
 <body>
 	<%
-		List<String> list = new ArrayList<String>();
+		/* View all upcoming reservations with their details */
 
 		try {
 
@@ -21,16 +21,9 @@
 			
 			//Create a SQL statement
 			Statement stmt = con.createStatement();
-			//Get the combobox from the index.jsp
-			int entity = Integer.parseInt(request.getParameter("stops"));
-			String str = null;
-			if (entity == 0){
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops = 0 ORDER by flightNum";
-			} else if (entity == 1){
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops = 1 ORDER by flightNum";
-			} else if (entity == 2) {
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops >= 2 ORDER by flightNum";
-			}
+			String entity = request.getParameter("customerid");
+			
+			String str = "SELECT t.datebought, t.ticketNum, t.isFlexible, t.bookingcost, t.numflights, t.seatnum, t.fare FROM ticket t WHERE datediff(datebought, sysdate) < 0 and t.cid=" + entity +";";
 			
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(str);
@@ -42,23 +35,32 @@
 			out.print("<tr>");
 			//make a column
 			out.print("<td>");
-			out.print("Number of Stops");
+			//print out column header
+			out.print("datebought");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Flight Number");
+			out.print("ticketNum");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Departure Date");
+			out.print("isFlexible");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Destination Date");
+			out.print("bookingcost");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Price");
+			out.print("numflights");
+			out.print("</td>");
+			//make a column
+			out.print("<td>");
+			out.print("seatnum");
+			out.print("</td>");
+			//make a column
+			out.print("<td>");
+			out.print("fare");
 			out.print("</td>");
 			out.print("</tr>");
 
@@ -68,24 +70,25 @@
 				out.print("<tr>");
 				//make a column
 				out.print("<td>");
-
-				out.print(result.getString("stops"));
+				out.print(result.getString("t.datebought"));
 				out.print("</td>");
 				out.print("<td>");
-
-				out.print(result.getString("flightNum"));
+				out.print(result.getString("t.ticketNum"));
 				out.print("</td>");
 				out.print("<td>");
-
-				out.print(result.getString("departuredate"));
+				out.print(result.getString("t.isFlexible"));
 				out.print("</td>");
 				out.print("<td>");
-
-				out.print(result.getString("destinationdate"));
+				out.print(result.getString("t.bookingcost"));
 				out.print("</td>");
 				out.print("<td>");
-
-				out.print(result.getString("price"));
+				out.print(result.getString("t.numflights"));
+				out.print("</td>");
+				out.print("<td>");
+				out.print(result.getString("t.seatnum"));
+				out.print("</td>");
+				out.print("<td>");
+				out.print(result.getString("t.fare"));
 				out.print("</td>");
 				out.print("</tr>");
 

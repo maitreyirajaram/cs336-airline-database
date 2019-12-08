@@ -21,17 +21,9 @@
 			
 			//Create a SQL statement
 			Statement stmt = con.createStatement();
-			//Get the combobox from the index.jsp
-			int entity = Integer.parseInt(request.getParameter("stops"));
-			String str = null;
-			if (entity == 0){
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops = 0 ORDER by flightNum";
-			} else if (entity == 1){
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops = 1 ORDER by flightNum";
-			} else if (entity == 2) {
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops >= 2 ORDER by flightNum";
-			}
-			
+			String lname = request.getParameter("entity");
+			String str = "SELECT u.cid, u.lastname, u.firstname, t.ticketNum, f.airlineid, t.datebought, t.fare, f.departuredate, f.destinationdate, f.departureairport, f.destinationairport FROM ticket t JOIN flight f ON (f.flightNum=t.flightNum) JOIN users u ON (t.cid=u.cid) WHERE u.lastname='" + lname + "'";
+
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(str);
 
@@ -42,11 +34,31 @@
 			out.print("<tr>");
 			//make a column
 			out.print("<td>");
-			out.print("Number of Stops");
+			out.print("CID");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Flight Number");
+			out.print("Last Name");
+			out.print("</td>");
+			//make a column
+			out.print("<td>");
+			out.print("First Name");
+			out.print("</td>");
+			//make a column
+			out.print("<td>");
+			out.print("Ticket Num");
+			out.print("</td>");
+			//make a column
+			out.print("<td>");
+			out.print("Airline ID");
+			out.print("</td>");
+			//make a column
+			out.print("<td>");
+			out.print("Date Bought");
+			out.print("</td>");
+			//make a column
+			out.print("<td>");
+			out.print("Fare");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
@@ -58,7 +70,11 @@
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Price");
+			out.print("Departure Airport");
+			out.print("</td>");
+			//make a column
+			out.print("<td>");
+			out.print("Destination Airport");
 			out.print("</td>");
 			out.print("</tr>");
 
@@ -69,11 +85,31 @@
 				//make a column
 				out.print("<td>");
 
-				out.print(result.getString("stops"));
+				out.print(result.getString("cid"));
 				out.print("</td>");
 				out.print("<td>");
 
-				out.print(result.getString("flightNum"));
+				out.print(result.getString("lastname"));
+				out.print("</td>");
+				out.print("<td>");
+
+				out.print(result.getString("firstname"));
+				out.print("</td>");
+				out.print("<td>");
+
+				out.print(result.getString("ticketNum"));
+				out.print("</td>");
+				out.print("<td>");
+				
+				out.print(result.getString("airlineid"));
+				out.print("</td>");
+				out.print("<td>");
+
+				out.print(result.getString("datebought"));
+				out.print("</td>");
+				out.print("<td>");
+				
+				out.print(result.getString("fare"));
 				out.print("</td>");
 				out.print("<td>");
 
@@ -85,7 +121,11 @@
 				out.print("</td>");
 				out.print("<td>");
 
-				out.print(result.getString("price"));
+				out.print(result.getString("departureairport"));
+				out.print("</td>");
+				out.print("<td>");
+
+				out.print(result.getString("destinationairport"));
 				out.print("</td>");
 				out.print("</tr>");
 

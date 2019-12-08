@@ -16,17 +16,19 @@
 		try {
 
 			//Get the database connection
-			ApplicationDB db = new ApplicationDB();	
-			Connection con = db.getConnection();	
+			Connection con = DriverManager.getConnection("jdbc:mysql://rakshaadb.ccd5ejynxyym.us-east-1.rds.amazonaws.com:3306/rakshaadb","rravi", "sairam23");
 			
 			//Create a SQL statement
 			Statement stmt = con.createStatement();
 			//Get the combobox from the index.jsp
-			String entity = request.getParameter("price");
-			if (entity != "2001"){
-				String str = "SELECT s.scheduleid, s.destinationdate, s.departuredate,f.price  FROM schedule s JOIN flight f ON f.flightNum WHERE f.price <= " + entity;
+			int entity = Integer.parseInt(request.getParameter("price"));
+			String str = null;
+			if (entity == 300){
+				str = "SELECT f.flightNum, f.destinationdate, f.departuredate, f.price FROM  flight f WHERE f.price <= 300 ORDER by f.price";
+			} else if (entity == 500)  {
+				str = "SELECT f.flightNum, f.destinationdate, f.departuredate, f.price FROM  flight f WHERE f.price <= 500 ORDER by f.price";
 			} else {
-				String str = "SELECT s.scheduleid, s.destinationdate, s.departuredate,f.price  FROM schedule s JOIN flight f ON f.flightNum WHERE f.price >= " + entity;
+				str = "SELECT f.flightNum, f.destinationdate, f.departuredate, f.price FROM  flight f WHERE f.price >= 501 ORDER by f.price";
 			}
 			
 			//Run the query against the database.
@@ -40,19 +42,19 @@
 			//make a column
 			out.print("<td>");
 			//print out column header
-			out.print("scheduleid");
+			out.print("Flight Number");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("destinationdate");
+			out.print("Destination Date");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("departuredate");
+			out.print("Departure Date");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("price");
+			out.print("Price");
 			out.print("</td>");
 			out.print("</tr>");
 
@@ -62,19 +64,19 @@
 				out.print("<tr>");
 				//make a column
 				out.print("<td>");
-				//Print out current schedyle id:
-				out.print(result.getString("scheduleid"));
+
+				out.print(result.getString("flightNum"));
 				out.print("</td>");
 				out.print("<td>");
-				//Print out current destination date:
+
 				out.print(result.getString("destinationdate"));
 				out.print("</td>");
 				out.print("<td>");
-				//Print out current departmentdate
+
 				out.print(result.getString("departuredate"));
 				out.print("</td>");
 				out.print("<td>");
-				//Print out current price
+
 				out.print(result.getString("price"));
 				out.print("</td>");
 				out.print("</tr>");

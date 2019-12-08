@@ -2,11 +2,7 @@ package com.cs336.pkg;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ApplicationDB {
 	
@@ -17,8 +13,7 @@ public class ApplicationDB {
 	public Connection getConnection(){
 		
 		//Create a connection string
-		//String connectionUrl = "jdbc:mysql://rakshaadb.ccd5ejynxyym.us-east-1.rds.amazonaws.com:3306/cs336Final";
-		String connectionUrl = "jdbc:mysql://localhost:3306/airlinedb";
+		String connectionUrl = "jdbc:mysql://rakshaadb.ccd5ejynxyym.us-east-1.rds.amazonaws.com:3306/rakshaadb";
 		Connection connection = null;
 		
 		try {
@@ -36,9 +31,8 @@ public class ApplicationDB {
 		}
 		try {
 			//Create a connection to your DB
-			//connection = DriverManager.getConnection(connectionUrl,"cs336Fall2019", "rakshaadb");
-			connection = DriverManager.getConnection(connectionUrl,"root", "rootroot");
-
+			connection = DriverManager.getConnection(connectionUrl,"rravi", "sairam23");
+			//System.out.println("Inside connection");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -58,85 +52,7 @@ public class ApplicationDB {
 	}
 	
 	
-	public Map<String, String> getAirports() throws SQLException {
-		Connection conn = null;
-		Statement stmt = null;
-		Map<String, String> airports = new HashMap<String, String>(); 
-		System.out.println("Get airports");
-		try {
-			conn = this.getConnection();
-			stmt = conn.createStatement();
-	        ResultSet rs = stmt.executeQuery("select airportid, airportname from airport");
-	        System.out.println("Get airports after query");
-	        while (rs.next()) {
-	        	airports.put(rs.getString("airportid"), rs.getString("airportname"));
-	        	System.out.println(rs.getString("airportid"));
-	        }
-	        return airports; 
-			
-		} finally {
-			if(stmt != null) {
-				stmt.close();
-			}
-			if (conn != null) {
-				this.closeConnection(conn);
-			}
-		}
-		
-	}
 	
-	public Map<Integer, Float> getFlights(String airportorigin, String airportdest, String startdate) throws SQLException{
-		Connection conn = null;
-		Statement stmt = null;
-		Map<Integer, Float> flightnums = new HashMap<Integer, Float>(); 
-		System.out.println("Get flights");
-		try {
-			conn = this.getConnection();
-			stmt = conn.createStatement();
-	        String sql = "select flightnum, price from flight where departureairport ='" 
-			+ airportorigin +  "' and destinationairport ='" + airportdest + 
-			"' and departuredate = '" + startdate + "';";
-	        System.out.println(sql);
-			ResultSet rs = stmt.executeQuery(sql);
-	        while (rs.next()) {
-	        	flightnums.put(new Integer(rs.getInt("flightnum")), rs.getFloat("price"));
-	 
-	        }
-	        return flightnums; 
-			
-		} finally {
-			if(stmt != null) {
-				stmt.close();
-			}
-			if (conn != null) {
-				this.closeConnection(conn);
-			}
-		}
-		
-	}
-	
-	public void saveTicket(int cid, int flightNum) throws SQLException {
-		Connection conn = null;
-		Statement stmt = null;
-		try {
-			conn = this.getConnection();
-			stmt = conn.createStatement();
-	        String sql = "Insert into ticket(cid, flightNum) values(" + cid + "," + flightNum + ");";
-	        System.out.println(sql);
-	        conn.setAutoCommit(false); //transaction for multiple updates
-	        stmt.executeUpdate(sql);
-	        conn.commit(); 
-			
-		} finally {
-			if(stmt != null) {
-				stmt.close();
-			}
-			if (conn != null) {
-				this.closeConnection(conn);
-			}
-		}
-		
-	}
 	
 	
 	public static void main(String[] args) {

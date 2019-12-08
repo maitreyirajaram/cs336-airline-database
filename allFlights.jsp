@@ -7,12 +7,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>View Flights by Airport</title>
 </head>
 <body>
 	<%
-		List<String> list = new ArrayList<String>();
-
 		try {
 
 			//Get the database connection
@@ -21,16 +19,9 @@
 			
 			//Create a SQL statement
 			Statement stmt = con.createStatement();
-			//Get the combobox from the index.jsp
-			int entity = Integer.parseInt(request.getParameter("stops"));
-			String str = null;
-			if (entity == 0){
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops = 0 ORDER by flightNum";
-			} else if (entity == 1){
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops = 1 ORDER by flightNum";
-			} else if (entity == 2) {
-				str = "select stops, flightNum, departuredate, destinationdate, price FROM flight WHERE stops >= 2 ORDER by flightNum";
-			}
+			String entity = request.getParameter("airport");
+			
+			String str = "SELECT airlineid, flightNum, departureairport, destinationairport, departuredate, destinationdate FROM flight where departureairport = '"+ entity +"' or destinationairport = '"+entity+"'";
 			
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(str);
@@ -42,11 +33,20 @@
 			out.print("<tr>");
 			//make a column
 			out.print("<td>");
-			out.print("Number of Stops");
+			//print out column header
+			out.print("Airline ID");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Flight Number");
+			out.print("Flight Num");
+			out.print("</td>");
+			//make a column
+			out.print("<td>");
+			out.print("Departure Airport");
+			out.print("</td>");
+			//make a column
+			out.print("<td>");
+			out.print("Destination Airport");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
@@ -54,11 +54,7 @@
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Destination Date");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Price");
+			out.print("destination Date");
 			out.print("</td>");
 			out.print("</tr>");
 
@@ -68,24 +64,22 @@
 				out.print("<tr>");
 				//make a column
 				out.print("<td>");
-
-				out.print(result.getString("stops"));
+				out.print(result.getString("airlineid"));
 				out.print("</td>");
 				out.print("<td>");
-
 				out.print(result.getString("flightNum"));
 				out.print("</td>");
 				out.print("<td>");
-
+				out.print(result.getString("departureairport"));
+				out.print("</td>");
+				out.print("<td>");
+				out.print(result.getString("destinationairport"));
+				out.print("</td>");
+				out.print("<td>");
 				out.print(result.getString("departuredate"));
 				out.print("</td>");
 				out.print("<td>");
-
 				out.print(result.getString("destinationdate"));
-				out.print("</td>");
-				out.print("<td>");
-
-				out.print(result.getString("price"));
 				out.print("</td>");
 				out.print("</tr>");
 

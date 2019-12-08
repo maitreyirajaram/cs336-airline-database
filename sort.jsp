@@ -7,50 +7,39 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Sort Flights</title>
 </head>
 <body>
 	<%
-		List<String> list = new ArrayList<String>();
-
 		try {
 
 			//Get the database connection
 			ApplicationDB db = new ApplicationDB();	
-			Connection con = db.getConnection();	
+			Connection con = db.getConnection();
 			
 			//Create a SQL statement
 			Statement stmt = con.createStatement();
-			//Get the combobox from the index.jsp
 			String entity = request.getParameter("sort");
-			//Make a SELECT query from the schedule table to sort the parameter specified at the index.jsp
-			if (entity != 'price'){
-				String str = "SELECT s.scheduleid, s.destinationdate, s.departuredate,f.price  FROM schedule JOIN flight f ON f. flightNum ORDER BY s." + entity;
-			} else {
-				String str = "SELECT s.scheduleid, s.destinationdate, s.departuredate,f.price  FROM schedule s JOIN flight f ON f. flightNum ORDER BY " + "f." + entity;
-			}
+			String str = "SELECT flightNum, departuredate, destinationdate, price FROM  flight order by " + entity;
 			
-
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(str);
-
+			
 			//Make an HTML table to show the results in:
 			out.print("<table>");
-
 			//make a row
 			out.print("<tr>");
 			//make a column
 			out.print("<td>");
-			//print out column header
-			out.print("scheduleid");
+			out.print("flight number");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("destinationdate");
+			out.print("departure date");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("departuredate");
+			out.print("destination date");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
@@ -60,27 +49,27 @@
 
 			//parse out the results
 			while (result.next()) {
+			     
 				//make a row
 				out.print("<tr>");
 				//make a column
 				out.print("<td>");
-				//Print out current schedyle id:
-				out.print(result.getString("scheduleid"));
+				
+				out.print(result.getString("flightNum"));
 				out.print("</td>");
 				out.print("<td>");
-				//Print out current destination date:
+				
+				out.print(result.getString("departuredate"));
+				out.print("</td>");
+				out.print("<td>");
+				
 				out.print(result.getString("destinationdate"));
 				out.print("</td>");
 				out.print("<td>");
-				//Print out current departmentdate
-				out.print(result.getString("departmentdate"));
-				out.print("</td>");
-				out.print("<td>");
-				//Print out current price
+				
 				out.print(result.getString("price"));
 				out.print("</td>");
 				out.print("</tr>");
-
 			}
 			out.print("</table>");
 
