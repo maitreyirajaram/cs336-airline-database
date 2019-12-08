@@ -115,6 +115,29 @@ public class ApplicationDB {
 		
 	}
 	
+	public void saveTicket(int cid, int flightNum) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+			conn = this.getConnection();
+			stmt = conn.createStatement();
+	        String sql = "Insert into ticket(cid, flightNum) values(" + cid + "," + flightNum + ");";
+	        System.out.println(sql);
+	        conn.setAutoCommit(false); //transaction for multiple updates
+	        stmt.executeUpdate(sql);
+	        conn.commit(); 
+			
+		} finally {
+			if(stmt != null) {
+				stmt.close();
+			}
+			if (conn != null) {
+				this.closeConnection(conn);
+			}
+		}
+		
+	}
+	
 	
 	public static void main(String[] args) {
 		ApplicationDB dao = new ApplicationDB();
