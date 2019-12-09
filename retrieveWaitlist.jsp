@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Waitlist By Flight</title>
 </head>
 <body>
 	<%
@@ -19,7 +19,9 @@
 			
 			//Create a SQL statement
 			Statement stmt = con.createStatement();
-			String str = "SELECT c.cid, c.lastname, c.firstname, sum(case when t.is_cancelled = 0 then (t.bookingcost+t.fare) else (t.bookingcost+t.cancelfee) end) AS revenue FROM ticket t join users c on (c.cid = t.cid) GROUP BY c.cid, c.lastname, c.firstname ORDER BY 4 DESC LIMIT 1";
+			int entity = Integer.parseInt(request.getParameter("flightNum"));
+			
+			String str = "select t.cid, u.lastname, u.firstname from ticket t join users u on t.cid=u.cid where t.flightNum=" + entity + " and t.waitlist=1;";
 			
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(str);
@@ -31,20 +33,15 @@
 			out.print("<tr>");
 			//make a column
 			out.print("<td>");
-			//print out column header
 			out.print("CID");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("Last Name");
+			out.print("Lastname");
 			out.print("</td>");
 			//make a column
 			out.print("<td>");
-			out.print("First Name");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Total Revenue");
+			out.print("Firstname");
 			out.print("</td>");
 			out.print("</tr>");
 
@@ -61,9 +58,6 @@
 				out.print("</td>");
 				out.print("<td>");
 				out.print(result.getString("firstname"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("revenue"));
 				out.print("</td>");
 				out.print("</tr>");
 
