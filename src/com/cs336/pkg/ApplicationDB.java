@@ -1,10 +1,12 @@
 package com.cs336.pkg;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -144,7 +146,9 @@ public class ApplicationDB {
 		try {
 			conn = this.getConnection();
 			stmt = conn.createStatement();
-	        String sql = "Insert into ticket(cid, flightNum, is_oneway, classtype, isflexible, cancelfee, fare) values(" + cid + "," + flightNum + "," + isOneWay + "," + classname+ "," + isFlex + "," + cancelFee + "," + price + ");";
+			LocalDate localdate = LocalDate.now(); 
+			java.sql.Date sqlDate = java.sql.Date.valueOf(localdate);
+	        String sql = "Insert into ticket(cid, flightNum, is_oneway, classtype, isflexible, cancelfee, fare, datebought) values(" + cid + "," + flightNum + "," + isOneWay + "," + classname+ "," + isFlex + "," + cancelFee + "," + price + "," + sqlDate + ");";
 	        System.out.println(sql);
 	        conn.setAutoCommit(false); //transaction for multiple updates
 	        stmt.executeUpdate(sql);
