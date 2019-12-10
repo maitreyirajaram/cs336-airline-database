@@ -18,7 +18,8 @@ public class ApplicationDB {
 	public Connection getConnection(){
 		
 		//Create a connection string
-		String connectionUrl = "jdbc:mysql://rakshaadb.ccd5ejynxyym.us-east-1.rds.amazonaws.com:3306/rakshaadb";
+		//String connectionUrl = "jdbc:mysql://rakshaadb.ccd5ejynxyym.us-east-1.rds.amazonaws.com:3306/rakshaadb";
+		String connectionUrl = "jdbc:mysql://localhost:3306/airlinedb";
 		Connection connection = null;
 		
 		try {
@@ -36,7 +37,8 @@ public class ApplicationDB {
 		}
 		try {
 			//Create a connection to your DB
-			connection = DriverManager.getConnection(connectionUrl,"rravi", "sairam23");
+			//connection = DriverManager.getConnection(connectionUrl,"rravi", "sairam23");
+			connection = DriverManager.getConnection(connectionUrl,"root", "rootroot");
 			//System.out.println("Inside connection");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -267,7 +269,8 @@ public class ApplicationDB {
 			conn = this.getConnection();
 			stmt = conn.createStatement();
 	        String sql = "select price from flight where flightNum =" + flightNum + ";"; 
-	        price = stmt.executeUpdate(sql); 
+	        ResultSet rs = stmt.executeQuery(sql); 
+	        price = rs.getFloat("price");
 			
 		} finally {
 			if(stmt != null) {
