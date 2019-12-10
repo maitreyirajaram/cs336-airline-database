@@ -12,15 +12,14 @@
 <body>
 <h1> Make Flight Reservations - Pick Flight</h1>
 <%
-
 ApplicationDB appdb = new com.cs336.pkg.ApplicationDB();
 String originAirport = request.getParameter("origin");
 String destAirport = request.getParameter("dest");
 String startDate = request.getParameter("startDate");
 String destDate = request.getParameter("destDate"); 
-
+String typeOfTrip = request.getParameter("typeOfTrip");
+String isFlexible = request.getParameter("flexible");
 Map<Integer, Float> airports = appdb.getFlights(originAirport, destAirport, startDate);
-
 %>
 <form action="saveReservation.jsp" method="POST">
 
@@ -33,6 +32,24 @@ Map<Integer, Float> airports = appdb.getFlights(originAirport, destAirport, star
   <option value="<%=mapElement.getKey()%>">Flight Number: <%=mapElement.getKey()%></option>
 <% } %>
 </select>
+
+<select name = "class">
+<option value = "economy">Economy</option>
+<option value = "business">Business</option>
+<option value = "first">First Class</option>
+</select>
+
+
+
+<action="saveReservation.jsp" method="GET">
+
+
+<%--hidden value one way/round trip passed from first page --%>
+<input type="hidden" id=typeOfTrip name="typeOfTrip" value="typeOfTrip">
+<%--hidden value flex tix passed from first page --%>
+<input type="hidden" id=flexible name="flexible" value="flexible">
+
+
 
 <p>
 <input type="submit" value="Submit"/>

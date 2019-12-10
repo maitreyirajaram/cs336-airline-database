@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -258,17 +259,40 @@ public class ApplicationDB {
 		
 	}
 	
-	public void saveTicket(int cid, int flightNum) throws SQLException {
+	public float getFlightPrice(int flightNum) throws SQLException {
+		float price = 0; 
 		Connection conn = null;
 		Statement stmt = null;
 		try {
 			conn = this.getConnection();
 			stmt = conn.createStatement();
-	        String sql = "Insert into ticket(cid, flightNum) values(" + cid + "," + flightNum + ");";
+	        String sql = "select price from flight where flightNum =" + flightNum + ";"; 
+	        price = stmt.executeUpdate(sql); 
+			
+		} finally {
+			if(stmt != null) {
+				stmt.close();
+			}
+			if (conn != null) {
+				this.closeConnection(conn);
+			}
+		}
+		return price; 
+	}
+	
+	public void saveTicket(int cid, int flightNum, int isOneWay, String classname, int isFlex, int cancelFee, float price) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+			conn = this.getConnection();
+			stmt = conn.createStatement();
+			LocalDate localdate = LocalDate.now(); 
+			java.sql.Date sqlDate = java.sql.Date.valueOf(localdate);
+	        String sql = "Insert into ticket(cid, flightNum, is_oneway, classtype, isflexible, cancelfee, fare, datebought) values(" + cid + "," + flightNum + "," + isOneWay + "," + classname+ "," + isFlex + "," + cancelFee + "," + price + "," + sqlDate + ");";
 	        System.out.println(sql);
 	        conn.setAutoCommit(false); //transaction for multiple updates
 	        stmt.executeUpdate(sql);
-	        conn.commit();
+	        conn.commit(); 
 			
 		} finally {
 			if(stmt != null) {
@@ -280,6 +304,7 @@ public class ApplicationDB {
 		}
 		
 	}
+	
 	
 	public int saveFlight(String depdate, String destdate, String depAirport, String destAirport, int isinternational, int isdomestic, int price, int stops, String aircraftid, String airlineid) throws SQLException {
 		Connection conn = null;
