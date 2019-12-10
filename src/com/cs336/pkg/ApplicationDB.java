@@ -115,13 +115,36 @@ public class ApplicationDB {
 		
 	}
 	
-	public void saveTicket(int cid, int flightNum) throws SQLException {
+	public float getFlightPrice(int flightNum) throws SQLException {
+		float price = 0; 
 		Connection conn = null;
 		Statement stmt = null;
 		try {
 			conn = this.getConnection();
 			stmt = conn.createStatement();
-	        String sql = "Insert into ticket(cid, flightNum) values(" + cid + "," + flightNum + ");";
+	        String sql = "select price from flight where flightNum =" + flightNum + ";"; 
+	        price = stmt.executeUpdate(sql); 
+			
+		} finally {
+			if(stmt != null) {
+				stmt.close();
+			}
+			if (conn != null) {
+				this.closeConnection(conn);
+			}
+		}
+		return price; 
+	}
+	
+	
+	
+	public void saveTicket(int cid, int flightNum, int isOneWay, String classname, int isFlex, int cancelFee, float price) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+			conn = this.getConnection();
+			stmt = conn.createStatement();
+	        String sql = "Insert into ticket(cid, flightNum, is_oneway, classtype, isflexible, cancelfee, fare) values(" + cid + "," + flightNum + "," + isOneWay + "," + classname+ "," + isFlex + "," + cancelFee + "," + price + ");";
 	        System.out.println(sql);
 	        conn.setAutoCommit(false); //transaction for multiple updates
 	        stmt.executeUpdate(sql);
