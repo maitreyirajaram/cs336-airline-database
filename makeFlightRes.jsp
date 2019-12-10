@@ -53,6 +53,11 @@ for (Map.Entry mapElement : airports.entrySet()) {
 <p>Departure Date: <input name="startDate"></input> </p>
 <p>Return Date:<input name="destDate"></input> </p>
 
+<select name="flexible">
+<option value="flexible">Flexible Dates</option>
+<option value="flexible">No Flexible Dates</option>
+</select>
+
 <p>
 <input type="submit" value="Get Flights"/>
 </p>
