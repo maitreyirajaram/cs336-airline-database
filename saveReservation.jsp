@@ -18,16 +18,16 @@ if (classname.equals("Business")){
 	cancelFee = 100; 
 }
 float price = appdb.getFlightPrice(flightNum);
-appdb.saveTicket(1, flightNum, isOneWay,classname, isFlex, cancelFee, price);
+String userid = (String)session.getAttribute("userid");
+int cid = appdb.getCid(userid); 
+
+appdb.saveTicket(cid, flightNum, isOneWay,classname, isFlex, cancelFee, price);
 %>
 
-<head>
+
 <title> Ticket Confirmation </title>
-</head>
 
-<% 
-out.println("Your ticket details:");
-out.println("Flight Number:" + flightNum);
-out.println(classname);
-out.println("Status: Booked"); //change if waitlist
-%>
+<p> Your Ticket Details: </p>
+Flight Number: <%=flightNum %>
+<br><%=classname %></br>
+<p>Status: Booked</p> <%--change if waitlist --%> 

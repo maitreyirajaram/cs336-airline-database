@@ -5,7 +5,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,17 +89,54 @@ public class ApplicationDB {
 		
 	}
 	
-	public Map<Integer, Float> getFlights(String airportorigin, String airportdest, String startdate) throws SQLException{
+	public int getCid(String username) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		int cid = 0; 
+		try {
+			conn = this.getConnection();
+			stmt = conn.createStatement();
+	        String sql = "select cid from users where username = '" + username + "';";
+	        System.out.println(sql);
+			ResultSet rs = stmt.executeQuery(sql);
+	        rs.next();
+	        cid = rs.getInt("cid");
+	        return cid; 
+			
+		} finally {
+			if(stmt != null) {
+				stmt.close();
+			}
+			if (conn != null) {
+				this.closeConnection(conn);
+			}
+		}	
+		
+	}
+	
+	public Map<Integer, Float> getFlights(String airportorigin, String airportdest, String startdate, String isFlexible) throws SQLException, ParseException{
 		Connection conn = null;
 		Statement stmt = null;
 		Map<Integer, Float> flightnums = new HashMap<Integer, Float>(); 
 		System.out.println("Get flights");
+		LocalDate startdateobj = LocalDate.parse(startdate);
+		LocalDate endstartdate = startdateobj.plusDays(3);
+		LocalDate initstartdate = startdateobj.minusDays(3);
 		try {
 			conn = this.getConnection();
 			stmt = conn.createStatement();
-	        String sql = "select flightnum, price from flight where departureairport ='" 
-			+ airportorigin +  "' and destinationairport ='" + airportdest + 
-			"' and departuredate = '" + startdate + "';";
+			String sql = ""; 
+			if (isFlexible.equals("flexible")) {
+				sql += "select flightnum, price from flight where departureairport ='" 
+						+ airportorigin +  "' and destinationairport ='" + airportdest + 
+						"' and departuredate >= '" + initstartdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "' and departuredate <= '"+ endstartdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "';";
+			}
+			else {
+				sql+="select flightnum, price from flight where departureairport ='" 
+						+ airportorigin +  "' and destinationairport ='" + airportdest + 
+						"' and departuredate = '" + startdate + "';";
+			}
+	        
 	        System.out.println(sql);
 			ResultSet rs = stmt.executeQuery(sql);
 	        while (rs.next()) {
@@ -270,6 +311,7 @@ public class ApplicationDB {
 			stmt = conn.createStatement();
 	        String sql = "select price from flight where flightNum =" + flightNum + ";"; 
 	        ResultSet rs = stmt.executeQuery(sql); 
+	        rs.next();
 	        price = rs.getFloat("price");
 			
 		} finally {
@@ -290,8 +332,10 @@ public class ApplicationDB {
 			conn = this.getConnection();
 			stmt = conn.createStatement();
 			LocalDate localdate = LocalDate.now(); 
-			java.sql.Date sqlDate = java.sql.Date.valueOf(localdate);
-	        String sql = "Insert into ticket(cid, flightNum, is_oneway, classtype, isflexible, cancelfee, fare, datebought) values(" + cid + "," + flightNum + "," + isOneWay + "," + classname+ "," + isFlex + "," + cancelFee + "," + price + "," + sqlDate + ");";
+			String pattern = "yyyy-MM-dd";
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+			String date = simpleDateFormat.format(new Date());
+	        String sql = "Insert into ticket(cid, flightNum, is_oneway, classtype, isflexible, cancelfee, fare, datebought) values(" + cid + "," + flightNum + "," + isOneWay + ",'" + classname+ "'," + isFlex + "," + cancelFee + "," + price + ",'" + date + "');";
 	        System.out.println(sql);
 	        conn.setAutoCommit(false); //transaction for multiple updates
 	        stmt.executeUpdate(sql);

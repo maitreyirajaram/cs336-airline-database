@@ -19,7 +19,7 @@ String startDate = request.getParameter("startDate");
 String destDate = request.getParameter("destDate"); 
 String typeOfTrip = request.getParameter("typeOfTrip");
 String isFlexible = request.getParameter("flexible");
-Map<Integer, Float> airports = appdb.getFlights(originAirport, destAirport, startDate);
+Map<Integer, Float> airports = appdb.getFlights(originAirport, destAirport, startDate, isFlexible);
 %>
 <form action="saveReservation.jsp" method="POST">
 

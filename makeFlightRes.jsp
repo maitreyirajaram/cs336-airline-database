@@ -53,9 +53,10 @@ for (Map.Entry mapElement : airports.entrySet()) {
 <p>Departure Date: <input name="startDate"></input> </p>
 <p>Return Date:<input name="destDate"></input> </p>
 
+<p>If "Flexible Dates" is chosen, flights within three days of your selected departure date will be displayed.</p>
 <select name="flexible">
 <option value="flexible">Flexible Dates</option>
-<option value="flexible">No Flexible Dates</option>
+<option value="not flexible">No Flexible Dates</option>
 </select>
 
 <p>
