@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.sql.DatabaseMetaData;
 
 public class ApplicationDB {
 	
@@ -331,6 +332,7 @@ public class ApplicationDB {
 		int isWaitlisted= 0; 
 		try {
 			conn = this.getConnection();
+			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			stmt = conn.createStatement();
 			String checkSeatsSql = "select count(*) as numseats from ticket where flightNum =" + flightNum + ";";
 			ResultSet rs = stmt.executeQuery(checkSeatsSql); 
