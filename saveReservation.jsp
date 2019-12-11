@@ -19,21 +19,23 @@ int flightNum = Integer.parseInt(request.getParameter("flightNum"));
 float price = appdb.getFlightPrice(flightNum);
 int flightNumReturn = -1;
 float priceReturn = 0; 
+int cancelFeeReturn = 0; 
+String classnameReturn = request.getParameter("class2");
 if (typeOfTrip.equals("Round Trip")){
 	flightNumReturn = Integer.parseInt(request.getParameter("flightNumReturn"));
 	priceReturn = appdb.getFlightPrice(flightNumReturn);
+	if (classnameReturn.equals("Business")){
+		cancelFeeReturn = 100; 
+	}
 }
 String classname = request.getParameter("class");
-String classnameReturn = request.getParameter("class2");
+
 
 int cancelFee = 0; 
 if (classname.equals("Business")){
 	cancelFee = 100; 
 }
-int cancelFeeReturn = 0; 
-if (classnameReturn.equals("Business")){
-	cancelFeeReturn = 100; 
-}
+
 
 
 //String userid = (String)session.getAttribute("userid");
