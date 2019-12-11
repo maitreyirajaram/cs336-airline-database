@@ -8,7 +8,7 @@ if (typeOfTrip.equals("One Way")){
 	isOneWay = 1;
 }
 int isFlex = 0; 
-if(flexible.equals("Flexible Dates")){
+if(flexible.equals("flexible")){
 	isFlex = 1; 
 }
 int flightNum = Integer.parseInt(request.getParameter("flightNum"));
