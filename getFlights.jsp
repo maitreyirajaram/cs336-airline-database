@@ -19,9 +19,18 @@ String startDate = request.getParameter("startDate");
 String destDate = request.getParameter("destDate"); 
 String typeOfTrip = request.getParameter("typeOfTrip");
 String isFlexible = request.getParameter("flexible");
+String returnDate = request.getParameter("destDate");
+
+
 Map<Integer, Float> airports = appdb.getFlights(originAirport, destAirport, startDate, isFlexible);
+Map<Integer, Float> returnairports = null;
+if (typeOfTrip.equals("Round Trip")){
+	returnairports = appdb.getFlights(destAirport,originAirport, returnDate, isFlexible);
+}
+
 %>
 <form action="saveReservation.jsp" method="POST">
+
 
 <p>Select Departure Flight from <%=originAirport%> to <%=destAirport %>:</p>
 <select name="flightNum">
@@ -39,15 +48,43 @@ Map<Integer, Float> airports = appdb.getFlights(originAirport, destAirport, star
 <option value = "first">First Class</option>
 </select>
 
+<%if (typeOfTrip.equals("Round Trip")) {
+	%>
+	<p>Select Return Flight from <%=destAirport%> to <%=originAirport %>:</p>
+	
+<select name="flightNumReturn">
+
+ <% 
+	
+ for (Map.Entry mapElement : returnairports.entrySet()) {
+%>
+  <option value="<%=mapElement.getKey()%>">Flight Number: <%=mapElement.getKey()%></option>
+<% } %>
+</select>
+
+
+<select name = "class2">
+<option value = "economy">Economy</option>
+<option value = "business">Business</option>
+<option value = "first">First Class</option>
+</select>
+<% 
+}
+%>
+<p>Enter Customer ID: <input name="cid"></input> </p>
 
 
 <action="saveReservation.jsp" method="GET">
 
 
 <%--hidden value one way/round trip passed from first page --%>
-<input type="hidden" id=typeOfTrip name="typeOfTrip" value="typeOfTrip">
+<input type="hidden" id=typeOfTrip name="typeOfTrip" value="<%=typeOfTrip%>">
 <%--hidden value flex tix passed from first page --%>
-<input type="hidden" id=flexible name="flexible" value="flexible">
+<input type="hidden" id=flexible name="flexible" value="<%=isFlexible%>">
+<%--hidden value destairport passed from first page --%>
+<input type="hidden" id=destAirport name="destAirport" value="<%=destAirport%>">
+<%--hidden value originairport passed from first page --%>
+<input type="hidden" id=originAirport name="originAirport" value="<%=originAirport%>">
 
 
 

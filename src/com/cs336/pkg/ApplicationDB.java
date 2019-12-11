@@ -89,7 +89,7 @@ public class ApplicationDB {
 		
 	}
 	
-	public int getCid(String username) throws SQLException {
+	/*public int getCid(String username) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
 		int cid = 0; 
@@ -112,7 +112,7 @@ public class ApplicationDB {
 			}
 		}	
 		
-	}
+	}*/
 	
 	public Map<Integer, Float> getFlights(String airportorigin, String airportdest, String startdate, String isFlexible) throws SQLException, ParseException{
 		Connection conn = null;
@@ -325,17 +325,29 @@ public class ApplicationDB {
 		return price; 
 	}
 	
-	public void saveTicket(int cid, int flightNum, int isOneWay, String classname, int isFlex, int cancelFee, float price) throws SQLException {
+	public int saveTicket(int cid, int flightNum, int isOneWay, String classname, int isFlex, int cancelFee, float price) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
+		int isWaitlisted= 0; 
 		try {
 			conn = this.getConnection();
 			stmt = conn.createStatement();
+			String checkSeatsSql = "select count(*) as numseats from ticket where flightNum =" + flightNum + ";";
+			ResultSet rs = stmt.executeQuery(checkSeatsSql); 
+	        rs.next();
+	        int seatsBooked = rs.getInt("numseats");
+	        int seatNum = 0; 
+	        if (seatsBooked >= 5) {
+	        	isWaitlisted = 1;
+	        }
+	        else {
+	        	seatNum = seatsBooked+1; 
+	        }
 			LocalDate localdate = LocalDate.now(); 
 			String pattern = "yyyy-MM-dd";
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 			String date = simpleDateFormat.format(new Date());
-	        String sql = "Insert into ticket(cid, flightNum, is_oneway, classtype, isflexible, cancelfee, fare, datebought) values(" + cid + "," + flightNum + "," + isOneWay + ",'" + classname+ "'," + isFlex + "," + cancelFee + "," + price + ",'" + date + "');";
+	        String sql = "Insert into ticket(cid, flightNum, is_oneway, classtype, isflexible, cancelfee, fare, datebought, waitlist, seatnum) values(" + cid + "," + flightNum + "," + isOneWay + ",'" + classname+ "'," + isFlex + "," + cancelFee + "," + price + ",'" + date +  "' ," + isWaitlisted + "," + seatNum + ");";
 	        System.out.println(sql);
 	        conn.setAutoCommit(false); //transaction for multiple updates
 	        stmt.executeUpdate(sql);
@@ -349,6 +361,7 @@ public class ApplicationDB {
 				this.closeConnection(conn);
 			}
 		}
+		return isWaitlisted; 
 		
 	}
 	

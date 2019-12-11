@@ -51,6 +51,7 @@ for (Map.Entry mapElement : airports.entrySet()) {
 </select>
 
 <p>Departure Date: <input name="startDate"></input> </p>
+<p> Only Select Return Date for Round Trip Tickets:</p>
 <p>Return Date:<input name="destDate"></input> </p>
 
 <p>If "Flexible Dates" is chosen, flights within three days of your selected departure date will be displayed.</p>
